@@ -1,18 +1,19 @@
 function photographerFactory(data) {
-	const { name, portrait, city, country, tagline, price } = data;
+	const { name, portrait, city, country, tagline, price, id } = data;
 
 	const picture = `assets/photographers/${portrait}`;
 
 	function getUserCardDOM() {
 		// Create the article element for the user card
 		const article = document.createElement('article');
-		article.setAttribute('aria-label', 'Photographer Card');
+		article.setAttribute('aria-label', 'Carte du photographe');
 		article.classList.add('photographer_card');
 
 		// Create the anchor element for the photographer's page link
 		const link = document.createElement('a');
-		link.setAttribute('href', 'photographer.html');
+		link.href = 'photographer.html' + '?_id=' + id;
 		link.classList.add('photographer_link');
+		link.setAttribute('aria-label', 'Voir les détails du photographe');
 
 		// Create the image element and set its source
 		const img = document.createElement('img');
@@ -22,7 +23,6 @@ function photographerFactory(data) {
 
 		// Create the heading element for the photographer's name
 		const h2 = document.createElement('h2');
-		h2.setAttribute('aria-label', 'Photographer Name');
 		h2.textContent = name;
 		h2.classList.add('photographer_name');
 
@@ -32,19 +32,16 @@ function photographerFactory(data) {
 
 		// Create the heading element for the photographer's country and city
 		const h3 = document.createElement('h3');
-		h3.setAttribute('aria-label', 'Location');
 		h3.textContent = city + ', ' + country;
 		h3.classList.add('photographer_location');
 
 		// Create the paragraph element for the photographer's tagline
 		const p1 = document.createElement('p');
-		p1.setAttribute('aria-label', 'Tagline');
 		p1.textContent = tagline;
 		p1.classList.add('photographer_tagline');
 
 		// Create the span element for the photographer's price
 		const p2 = document.createElement('p');
-		p2.setAttribute('aria-label', 'Price per Day');
 		p2.textContent = price + '€/jour';
 		p2.classList.add('photographer_price');
 
