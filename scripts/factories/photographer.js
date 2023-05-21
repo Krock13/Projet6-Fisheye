@@ -55,9 +55,6 @@ function photographerFactory(data) {
 	}
 
 	function getPhotographerCardDOM() {
-		// Get the parent div element
-		const parentDiv = document.querySelector('.photograph-header');
-
 		// Create the article element for the Photographer card
 		const article = document.createElement('article');
 		article.setAttribute('aria-label', 'Carte du photographe');
@@ -83,15 +80,26 @@ function photographerFactory(data) {
 		article.appendChild(h3);
 		article.appendChild(p1);
 
+		// Create buttons for the contact form
+		const btn = document.createElement('button');
+		btn.classList.add('contact_button');
+		btn.setAttribute('onclick', 'displayModal()');
+		btn.textContent = 'Contactez-moi';
+
 		// Create the image element and set its source
 		const img = document.createElement('img');
 		img.setAttribute('src', picture);
 		img.setAttribute('alt', name);
 		img.classList.add('profile_image');
 
-		// Append the article and image to the parent div
-		parentDiv.appendChild(article);
-		parentDiv.appendChild(img);
+		// Create a container to hold both the article and image
+		const container = document.createElement('div');
+		container.classList.add('photograph-header');
+		container.appendChild(article);
+		container.appendChild(btn);
+		container.appendChild(img);
+
+		return container;
 	}
 
 	// Return an object with the photographer's name, picture, and getUserCardDOM method
