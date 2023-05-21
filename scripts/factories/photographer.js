@@ -18,7 +18,7 @@ function photographerFactory(data) {
 		// Create the image element and set its source
 		const img = document.createElement('img');
 		img.setAttribute('src', picture);
-		img.setAttribute('alt', name); // Set alternative text to the photographer's name
+		img.setAttribute('alt', name);
 		img.classList.add('photographer_image');
 
 		// Create the heading element for the photographer's name
@@ -54,6 +54,46 @@ function photographerFactory(data) {
 		return article;
 	}
 
+	function getPhotographerCardDOM() {
+		// Get the parent div element
+		const parentDiv = document.querySelector('.photograph-header');
+
+		// Create the article element for the Photographer card
+		const article = document.createElement('article');
+		article.setAttribute('aria-label', 'Carte du photographe');
+		article.classList.add('profile_photographer');
+
+		// Create the heading element for the photographer's name
+		const h2 = document.createElement('h2');
+		h2.textContent = name;
+		h2.classList.add('profile_name');
+
+		// Create the heading element for the photographer's country and city
+		const h3 = document.createElement('h3');
+		h3.textContent = city + ', ' + country;
+		h3.classList.add('profile_location');
+
+		// Create the paragraph element for the photographer's tagline
+		const p1 = document.createElement('p');
+		p1.textContent = tagline;
+		p1.classList.add('profile_tagline');
+
+		// Append all the elements to the article
+		article.appendChild(h2);
+		article.appendChild(h3);
+		article.appendChild(p1);
+
+		// Create the image element and set its source
+		const img = document.createElement('img');
+		img.setAttribute('src', picture);
+		img.setAttribute('alt', name);
+		img.classList.add('profile_image');
+
+		// Append the article and image to the parent div
+		parentDiv.appendChild(article);
+		parentDiv.appendChild(img);
+	}
+
 	// Return an object with the photographer's name, picture, and getUserCardDOM method
-	return { name, picture, getUserCardDOM };
+	return { getUserCardDOM, getPhotographerCardDOM };
 }
