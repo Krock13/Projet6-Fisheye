@@ -1,4 +1,4 @@
-async function displayData(photographers) {
+async function displayData(photographers, media) {
 	// Get the parent div element
 	const parentDiv = document.querySelector('#main');
 
@@ -12,13 +12,21 @@ async function displayData(photographers) {
 	const profileCardDOM = photographerModel.getPhotographerCardDOM();
 
 	parentDiv.appendChild(profileCardDOM);
+
+	const filteredMedia = media.filter((item) => item.photographerId === id);
+
+	const mediaModel = galleryFactory(filteredMedia);
+	const mediaCardDOM = mediaModel.getMediaCardDOM();
+
+	parentDiv.appendChild(mediaCardDOM.sortContainer);
+	parentDiv.appendChild(mediaCardDOM.galleryContainer);
 }
 
 async function init() {
 	// Retrieve the photographers data
-	const { photographers } = await getPhotographers();
+	const { photographers, media } = await getPhotographersData();
 	// Display the photographers data
-	displayData(photographers);
+	displayData(photographers, media);
 }
 
 // Initialize the application
