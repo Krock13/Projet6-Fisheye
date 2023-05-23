@@ -2,6 +2,8 @@
 	display: none;
 }
 
+/* Photographer profile */
+
 .photograph-header {
 	background-color: #fafafa;
 	height: 300px;
@@ -13,20 +15,24 @@
 	padding: 0% 3%;
 }
 
-.profile_name {
+.photograph-header article {
+	margin-top: -20px;
+}
+
+.photographer_card h2 {
 	font-size: 64px;
 	color: #d3573c;
 	margin-top: 0;
 	margin-bottom: 0;
 }
 
-.profile_location {
+.photographer_card h3 {
 	font-size: 24px;
 	color: #901c1c;
 	margin-top: 0;
 }
 
-.profile_tagline {
+.photographer_card p {
 	font-size: 18px;
 	opacity: 0.9;
 }
@@ -44,13 +50,7 @@
 	cursor: pointer;
 }
 
-.profile_image {
-	height: 200px;
-	width: 200px;
-	border-radius: 50%;
-	object-fit: cover;
-	margin: 2px;
-}
+/* Contact modal */
 
 .modal {
 	border-radius: 5px;
