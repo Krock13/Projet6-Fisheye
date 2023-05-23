@@ -5,7 +5,7 @@ function galleryFactory(data) {
 	function getMediaCardDOM() {
 		// Create the paragraph for "Sort by" text
 		const sortParagraph = document.createElement('p');
-		sortParagraph.textContent = 'Trier par:';
+		sortParagraph.textContent = 'Trier par';
 
 		// Create the sort selector
 		const sortSelect = document.createElement('select');
@@ -31,11 +31,17 @@ function galleryFactory(data) {
 
 		// Create the container for the sort paragraph and sort selector
 		const sortContainer = document.createElement('div');
+		sortContainer.classList.add('sort-container');
 		sortContainer.appendChild(sortParagraph);
 		sortContainer.appendChild(sortSelect);
 
 		// Create the container for the gallery items
 		const galleryContainer = document.createElement('div');
+		galleryContainer.classList.add('gallery-container');
+
+		// Create the container for the gallery items
+		const galleryGrid = document.createElement('div');
+		galleryGrid.classList.add('gallery-grid');
 
 		// Iterate over the data and create gallery items
 		data.forEach((item) => {
@@ -46,12 +52,14 @@ function galleryFactory(data) {
 				const img = document.createElement('img');
 				img.setAttribute('src', `assets/media/${item.image}`);
 				img.setAttribute('alt', item.title + ', closeup view');
+				img.classList.add('gallery-media');
 				article.appendChild(img);
 			} else if (item.video) {
 				// Create the <video> element for videos
 				const videoElement = document.createElement('video');
 				videoElement.setAttribute('src', `assets/media/${item.video}`);
 				videoElement.setAttribute('alt', item.title + ', closeup view');
+				videoElement.classList.add('gallery-media');
 				videoElement.setAttribute('controls', true);
 				article.appendChild(videoElement);
 			}
@@ -69,13 +77,21 @@ function galleryFactory(data) {
 			heart.setAttribute('src', './assets/icons/heart.png');
 			heart.setAttribute('alt', 'likes');
 
-			// Append the title, paragraph, and heart elements to the article
-			article.appendChild(h2);
-			article.appendChild(p1);
-			article.appendChild(heart);
+			// Create container
+			const legendContainer = document.createElement('div');
+			legendContainer.classList.add('legend-container');
+
+			// Append the title, paragraph, and heart elements to the container
+			legendContainer.appendChild(h2);
+			legendContainer.appendChild(p1);
+			legendContainer.appendChild(heart);
+
+			// Append the div to the article
+			article.appendChild(legendContainer);
 
 			// Append the article to the gallery container
-			galleryContainer.appendChild(article);
+			galleryGrid.appendChild(article);
+			galleryContainer.appendChild(galleryGrid);
 		});
 
 		return { sortContainer, galleryContainer };
