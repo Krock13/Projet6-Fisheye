@@ -1,4 +1,4 @@
-function photographerFactory(data) {
+export function photographerFactory(data) {
 	// Destructure the properties from the data object
 	const { name, portrait, city, country, tagline, price, id } = data;
 
@@ -51,7 +51,7 @@ function photographerFactory(data) {
 	return { getUserCardDOM };
 }
 
-function appendChildIndex(card) {
+export function appendChildIndex(card) {
 	// Destructure the properties from the card object
 	const { article, link, img, h2, h3, p1, p2 } = card;
 
@@ -68,7 +68,7 @@ function appendChildIndex(card) {
 	return article;
 }
 
-function appendChildPhotographer(card) {
+export function appendChildPhotographer(card) {
 	// Destructure the properties from the card object
 	const { article, img, h2, h3, p1 } = card;
 

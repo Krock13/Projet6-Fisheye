@@ -1,4 +1,4 @@
-function galleryFactory(data) {
+export function galleryFactory(data) {
 	// Destructure the properties from the data object
 	const { id, photographerId, title, image, video, likes, date, price } = data;
 

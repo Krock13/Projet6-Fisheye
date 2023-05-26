@@ -1,4 +1,9 @@
-async function displayData(photographers, media) {
+import { photographerFactory } from '../factories/photographer';
+import { appendChildPhotographer } from '../factories/photographer';
+import { galleryFactory } from '../factories/gallery';
+import { getPhotographersData } from '../utils/fetchPhotographers';
+
+function displayData(photographers, media) {
 	// Get the parent div element
 	const parentDiv = document.querySelector('#main');
 

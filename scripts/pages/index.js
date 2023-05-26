@@ -1,3 +1,6 @@
+import { photographerFactory, appendChildIndex } from '../factories/photographer';
+import { getPhotographersData } from '../utils/fetchPhotographers';
+
 async function displayData(photographers) {
 	const photographersSection = document.querySelector('.photographer_section');
 
