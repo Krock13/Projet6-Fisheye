@@ -1,7 +1,7 @@
-import { photographerFactory } from '../factories/photographer';
-import { appendChildPhotographer } from '../factories/photographer';
-import { galleryFactory } from '../factories/gallery';
-import { getPhotographersData } from '../utils/fetchPhotographers';
+import { photographerFactory } from '../factories/photographer.js';
+import { appendChildPhotographer } from '../factories/photographer.js';
+import { galleryFactory } from '../factories/gallery.js';
+import { getPhotographersData } from '../utils/fetchPhotographers.js';
 
 function displayData(photographers, media) {
 	// Get the parent div element
