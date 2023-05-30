@@ -1,3 +1,5 @@
+import { displayModal } from '../utils/contactForm.js';
+
 export function photographerFactory(data) {
 	// Destructure the properties from the data object
 	const { name, portrait, city, country, tagline, price, id } = data;
@@ -75,8 +77,9 @@ export function appendChildPhotographer(card) {
 	// Create buttons for the contact form
 	const btn = document.createElement('button');
 	btn.classList.add('contact_button');
-	btn.setAttribute('onclick', 'displayModal()');
+	// btn.setAttribute('onclick', 'displayModal()');
 	btn.textContent = 'Contactez-moi';
+	btn.addEventListener('click', displayModal);
 
 	// Create a container element to hold the photographer's header
 	const container = document.createElement('div');
