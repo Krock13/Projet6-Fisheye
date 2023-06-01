@@ -33,8 +33,7 @@
 	opacity: 0.9;
 }
 
-.contact_button,
-#sort-select {
+.contact_button {
 	font-size: 20px;
 	font-weight: bold;
 	color: white;
@@ -46,6 +45,76 @@
 	border-radius: 5px;
 	cursor: pointer;
 }
+
+/* Sort menu */
+.sort-container {
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	margin: 10px 100px;
+}
+
+.sort-container p {
+	font-size: 18px;
+	font-weight: 700;
+	margin-right: 30px;
+}
+
+#main-button {
+	position: relative;
+	font-size: 20px;
+	font-weight: bold;
+	color: white;
+	padding: 11px;
+	width: 170px;
+	height: 70px;
+	border: none;
+	background-color: #901c1c;
+	border-radius: 5px;
+	cursor: pointer;
+	text-align: start;
+	padding-left: 20px;
+}
+
+.arrow-down {
+	position: absolute;
+	right: 20px;
+	top: 28px;
+	transform: rotate(-180deg);
+}
+
+#sort-button {
+	position: relative;
+	color: white;
+	padding: 11px;
+	width: 148px;
+	height: 170px;
+	background-color: #901c1c;
+	border-radius: 5px;
+	cursor: pointer;
+	text-align: start;
+	padding-top: 0px;
+}
+
+#sort-button p {
+	font-size: 20px;
+	font-weight: bold;
+	width: 100%;
+	border-bottom: solid 1px white;
+	padding-bottom: 14px;
+}
+
+#sort-button p:last-child {
+	border-bottom: none;
+}
+
+.arrow-up {
+	position: absolute;
+	right: 20px;
+	top: 28px;
+}
+
+/* Modal */
 
 .modal {
 	border-radius: 5px;
@@ -126,20 +195,6 @@ form button {
 	cursor: pointer;
 }
 
-/* Sort menu */
-
-.sort-container {
-	display: flex;
-	flex-direction: row;
-	margin: 10px 100px;
-}
-
-.sort-container p {
-	font-size: 18px;
-	font-weight: 700;
-	margin-right: 30px;
-}
-
 /* Gallery */
 
 .gallery-media {
@@ -153,7 +208,7 @@ form button {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	margin: 58px 100px;
+	margin: 120px 100px;
 }
 
 .gallery-grid {
