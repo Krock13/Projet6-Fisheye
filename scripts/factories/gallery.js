@@ -1,7 +1,4 @@
 export function galleryFactory(data) {
-	// Destructure the properties from the data object
-	// const { id, photographerId, title, image, video, likes, date, price } = data;
-
 	function getMediaCardDOM() {
 		// Create the container for the sort selector container
 		const sortContainer = document.createElement('div');
@@ -11,12 +8,12 @@ export function galleryFactory(data) {
 		sortLabel.textContent = 'Trier par';
 
 		const arrowDown = document.createElement('img');
-		arrowDown.setAttribute('src', './assets/icons/vector.png');
+		arrowDown.setAttribute('src', './assets/icons/whiteArrow.png');
 		arrowDown.classList.add('arrow-down');
 		arrowDown.setAttribute('alt', 'arrow');
 
 		const arrowUp = document.createElement('img');
-		arrowUp.setAttribute('src', './assets/icons/vector.png');
+		arrowUp.setAttribute('src', './assets/icons/whiteArrow.png');
 		arrowUp.classList.add('arrow-up');
 		arrowUp.setAttribute('alt', 'arrow');
 
@@ -170,15 +167,15 @@ export function galleryFactory(data) {
 
 			if (sorting === 'popularity') {
 				data.sort((a, b) => b.likes - a.likes);
-				sortBy(data);
+				displayGallery(data);
 			} else if (sorting === 'date') {
 				data.sort((a, b) => new Date(a.date) - new Date(b.date));
-				sortBy(data);
+				displayGallery(data);
 			} else if (sorting === 'title') {
 				data.sort((a, b) => a.title.localeCompare(b.title));
-				sortBy(data);
+				displayGallery(data);
 			}
-			function sortBy(data) {
+			function displayGallery(data) {
 				// Iterate over the data and create gallery items
 				data.forEach((item) => {
 					const article = document.createElement('article');
@@ -186,17 +183,24 @@ export function galleryFactory(data) {
 					if (item.image) {
 						// Create the <img> element for images
 						const img = document.createElement('img');
-						img.setAttribute('src', `assets/media/${item.image}`);
+						const currentImage = `./assets/media/${item.image}`;
+						img.setAttribute('src', currentImage);
 						img.setAttribute('alt', item.title + ', closeup view');
 						img.classList.add('gallery-media');
+						img.addEventListener('click', function () {
+							createLightbox(item);
+						});
 						article.appendChild(img);
 					} else if (item.video) {
 						// Create the <video> element for videos
 						const videoElement = document.createElement('video');
-						videoElement.setAttribute('src', `assets/media/${item.video}`);
+						const currentVideo = `./assets/media/${item.video}`;
+						videoElement.setAttribute('src', currentVideo);
 						videoElement.setAttribute('alt', item.title + ', closeup view');
 						videoElement.classList.add('gallery-media');
-						videoElement.setAttribute('controls', true);
+						videoElement.addEventListener('click', function () {
+							createLightbox(item);
+						});
 						article.appendChild(videoElement);
 					}
 
@@ -229,6 +233,90 @@ export function galleryFactory(data) {
 					galleryGrid.appendChild(article);
 					galleryContainer.appendChild(galleryGrid);
 				});
+
+				function createLightbox(media) {
+					function closeLightbox() {
+						const main = document.querySelector('#main');
+						const lightbox = document.querySelector('.lightbox');
+						main.removeChild(lightbox);
+					}
+
+					function goToSlide(direction) {
+						const lightboxContainer = document.querySelector('.lightbox_container');
+						const currentMedia = document.querySelector('.mediaLightbox');
+
+						const src = currentMedia.getAttribute('src');
+						const filename = src.split('/').pop();
+						const currentIndex = data.findIndex((obj) => obj.image === filename || obj.video === filename);
+
+						let newIndex;
+						if (direction === 'next') {
+							const isLastSlide = currentIndex === data.length - 1;
+							newIndex = isLastSlide ? 0 : currentIndex + 1;
+						} else if (direction === 'previous') {
+							const isFirstSlide = currentIndex === 0;
+							newIndex = isFirstSlide ? data.length - 1 : currentIndex - 1;
+						}
+
+						lightboxContainer.removeChild(currentMedia);
+						const media = data[newIndex];
+
+						if (media.image) {
+							const image = document.createElement('img');
+							image.src = `./assets/media/${media.image}`;
+							image.classList.add('mediaLightbox');
+							lightboxContainer.appendChild(image);
+						} else if (media.video) {
+							const video = document.createElement('video');
+							video.src = `./assets/media/${media.video}`;
+							video.classList.add('mediaLightbox');
+							video.setAttribute('controls', '');
+							lightboxContainer.appendChild(video);
+						}
+					}
+
+					const lightbox = document.createElement('div');
+					lightbox.classList.add('lightbox');
+
+					const lightboxContainer = document.createElement('div');
+					lightboxContainer.classList.add('lightbox_container');
+
+					if (media.image) {
+						const image = document.createElement('img');
+						image.src = `./assets/media/${media.image}`;
+						image.classList.add('mediaLightbox');
+						lightboxContainer.appendChild(image);
+					} else if (media.video) {
+						const video = document.createElement('video');
+						video.src = `./assets/media/${media.video}`;
+						video.classList.add('mediaLightbox');
+						video.setAttribute('controls', '');
+						lightboxContainer.appendChild(video);
+					}
+
+					const lightboxClose = document.createElement('button');
+					lightboxClose.innerText = 'Fermer';
+					lightboxClose.classList.add('lightbox_close');
+					lightboxClose.addEventListener('click', closeLightbox);
+
+					const lightboxNext = document.createElement('button');
+					lightboxNext.innerText = 'Suivant';
+					lightboxNext.classList.add('lightbox_next');
+					lightboxNext.addEventListener('click', () => goToSlide('next'));
+
+					const lightboxPrev = document.createElement('button');
+					lightboxPrev.innerText = 'Précédent';
+					lightboxPrev.classList.add('lightbox_prev');
+					lightboxPrev.addEventListener('click', () => goToSlide('previous'));
+
+					lightboxContainer.appendChild(lightboxClose);
+					lightboxContainer.appendChild(lightboxNext);
+					lightboxContainer.appendChild(lightboxPrev);
+					lightbox.appendChild(lightboxContainer);
+
+					const main = document.getElementById('main');
+					main.appendChild(lightbox);
+				}
 			}
 		}
 		return { sortContainer, galleryContainer };

@@ -14,7 +14,7 @@ export function createModalDOM() {
 	title.innerHTML = 'Contactez-moi<br>' + name.textContent;
 	title.setAttribute('id', titleId);
 	const closeIcon = document.createElement('img');
-	closeIcon.src = 'assets/icons/close.svg';
+	closeIcon.src = 'assets/icons/whiteCross.png';
 	closeIcon.alt = 'Fermer le formulaire de contact';
 	closeIcon.addEventListener('click', closeModal);
 
