@@ -175,6 +175,36 @@ export function galleryFactory(data) {
 				data.sort((a, b) => a.title.localeCompare(b.title));
 				displayGallery(data);
 			}
+
+			const likedItems = [];
+			function like(heartButton) {
+				const itemId = heartButton.dataset.itemId;
+				const likeNumber = heartButton.parentNode.querySelector('.like');
+
+				// Check if the item is already liked by searching its ID in the array
+				const isLiked = likedItems.includes(itemId);
+
+				if (isLiked) {
+					// Remove the item from the liked items array
+					const itemIndex = likedItems.indexOf(itemId);
+					likedItems.splice(itemIndex, 1);
+
+					// Decrement the number of likes
+					const currentLikes = parseInt(likeNumber.textContent);
+					likeNumber.textContent = (currentLikes - 1).toString();
+
+					heartButton.setAttribute('aria-label', 'likes');
+				} else {
+					// Add the item to the liked items array
+					likedItems.push(itemId);
+
+					// Increment the number of likes
+					const currentLikes = parseInt(likeNumber.textContent);
+					likeNumber.textContent = (currentLikes + 1).toString();
+
+					heartButton.setAttribute('aria-label', 'unlike');
+				}
+			}
 			function displayGallery(data) {
 				// Iterate over the data and create gallery items
 				data.forEach((item) => {
@@ -210,12 +240,20 @@ export function galleryFactory(data) {
 
 					// Create the paragraph element for the media likes
 					const p1 = document.createElement('p');
+					p1.classList.add('like');
 					p1.textContent = item.likes;
 
 					// Create the image element for the heart icon
-					const heart = document.createElement('img');
-					heart.setAttribute('src', './assets/icons/heart.png');
-					heart.setAttribute('alt', 'likes');
+					const heart = document.createElement('button');
+					heart.classList.add('heart');
+					heart.setAttribute('aria-label', 'likes');
+					heart.dataset.itemId = item.id;
+					heart.addEventListener('click', function () {
+						like(this);
+					});
+
+					// // Create the div element for total likes and price
+					// const totalLikes = document.createElement('div');
 
 					// Create container
 					const legendContainer = document.createElement('div');

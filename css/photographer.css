@@ -46,6 +46,12 @@
 	cursor: pointer;
 }
 
+.contact_button:hover,
+.contact_button:focus {
+	background-color: #db8876;
+	color: black;
+}
+
 /* Sort menu */
 .sort-container {
 	position: absolute;
@@ -238,9 +244,14 @@ form button {
 	right: 30px;
 }
 
-.legend-container img {
+.heart {
 	position: absolute;
 	right: 0;
+	background: url(../assets/icons/heart.svg);
+	width: 20px;
+	height: 19px;
+	border: none;
+	cursor: pointer;
 }
 
 .lightbox {
