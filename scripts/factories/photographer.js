@@ -72,12 +72,11 @@ export function appendChildIndex(card) {
 
 export function appendChildPhotographer(card) {
 	// Destructure the properties from the card object
-	const { article, img, h2, h3, p1 } = card;
+	const { article, img, h2, h3, p1, p2 } = card;
 
 	// Create buttons for the contact form
 	const btn = document.createElement('button');
 	btn.classList.add('contact_button');
-	// btn.setAttribute('onclick', 'displayModal()');
 	btn.textContent = 'Contactez-moi';
 	btn.addEventListener('click', displayModal);
 
@@ -85,10 +84,14 @@ export function appendChildPhotographer(card) {
 	const container = document.createElement('div');
 	container.classList.add('photograph-header');
 
+	// Add class hidden for p2 element
+	p2.classList.add('hidden');
+
 	// Append the heading elements and paragraph to the article
 	article.appendChild(h2);
 	article.appendChild(h3);
 	article.appendChild(p1);
+	article.appendChild(p2);
 
 	// Append the article, button, and image to the container
 	container.appendChild(article);

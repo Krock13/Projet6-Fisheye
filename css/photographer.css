@@ -52,6 +52,10 @@
 	color: black;
 }
 
+.hidden {
+	display: none;
+}
+
 /* Sort menu */
 .sort-container {
 	position: absolute;
@@ -235,6 +239,10 @@ form button {
 .legend-container h2 {
 	font-size: 24px;
 	color: #901c1c;
+	max-width: 290px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .legend-container p {
@@ -336,4 +344,33 @@ form button {
 	to {
 		opacity: 1;
 	}
+}
+
+/* Abstract */
+
+#abstract {
+	position: fixed;
+	bottom: -20px;
+	right: 36px;
+	display: flex;
+	flex-direction: row;
+	width: 376px;
+	height: 89px;
+	background-color: #db8876;
+	border-radius: 5px;
+	font-size: 24px;
+	font-weight: 800;
+	z-index: 3;
+}
+
+#total-likes {
+	position: absolute;
+	left: 36px;
+	background: url(../assets/icons/blackHeart.svg) center no-repeat;
+	width: 120px;
+}
+
+.price_text {
+	position: absolute;
+	right: 36px;
 }

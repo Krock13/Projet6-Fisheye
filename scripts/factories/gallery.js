@@ -151,8 +151,32 @@ export function galleryFactory(data) {
 				sortContainer.appendChild(sortButton);
 			}
 		}
-		// Gallery
 
+		// Abstract
+		const main = document.querySelector('#main');
+
+		// Create the div element for total likes and price
+		const Abstract = document.createElement('div');
+		Abstract.setAttribute('id', 'abstract');
+
+		// Create the paragraph element for the total likes
+		const totalLikes = document.createElement('p');
+		totalLikes.setAttribute('id', 'total-likes');
+		const allLikes = data.reduce((total, obj) => total + obj.likes, 0);
+		totalLikes.innerText = allLikes;
+
+		// Create the paragraph element for the price
+		const photographerPrice = document.querySelector('#photographer_price');
+		const price = parseInt(photographerPrice.textContent);
+		const priceText = document.createElement('p');
+		priceText.innerText = price + '€ / jour';
+		priceText.classList.add('price_text');
+
+		Abstract.appendChild(totalLikes);
+		Abstract.appendChild(priceText);
+		main.appendChild(Abstract);
+
+		// Gallery
 		// Create the container for the gallery items
 		const galleryContainer = document.createElement('div');
 		galleryContainer.classList.add('gallery-container');
@@ -177,6 +201,7 @@ export function galleryFactory(data) {
 			}
 
 			const likedItems = [];
+			const totalLikesElement = document.querySelector('#total-likes');
 			function like(heartButton) {
 				const itemId = heartButton.dataset.itemId;
 				const likeNumber = heartButton.parentNode.querySelector('.like');
@@ -193,6 +218,10 @@ export function galleryFactory(data) {
 					const currentLikes = parseInt(likeNumber.textContent);
 					likeNumber.textContent = (currentLikes - 1).toString();
 
+					// Decrement the number of total likes
+					const currentTotalLikes = parseInt(totalLikesElement.textContent);
+					totalLikesElement.textContent = (currentTotalLikes - 1).toString();
+
 					heartButton.setAttribute('aria-label', 'likes');
 				} else {
 					// Add the item to the liked items array
@@ -201,6 +230,10 @@ export function galleryFactory(data) {
 					// Increment the number of likes
 					const currentLikes = parseInt(likeNumber.textContent);
 					likeNumber.textContent = (currentLikes + 1).toString();
+
+					// Increment the number of total likes
+					const currentTotalLikes = parseInt(totalLikesElement.textContent);
+					totalLikesElement.textContent = (currentTotalLikes + 1).toString();
 
 					heartButton.setAttribute('aria-label', 'unlike');
 				}
@@ -251,9 +284,6 @@ export function galleryFactory(data) {
 					heart.addEventListener('click', function () {
 						like(this);
 					});
-
-					// // Create the div element for total likes and price
-					// const totalLikes = document.createElement('div');
 
 					// Create container
 					const legendContainer = document.createElement('div');
