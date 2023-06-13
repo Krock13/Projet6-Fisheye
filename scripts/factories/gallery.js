@@ -135,12 +135,14 @@ export function galleryFactory(data) {
 
 		if (sorting === 'popularity') {
 			data.sort((a, b) => b.likes - a.likes);
+			displayGallery(data);
 		} else if (sorting === 'date') {
 			data.sort((a, b) => new Date(a.date) - new Date(b.date));
+			displayGallery(data);
 		} else if (sorting === 'title') {
 			data.sort((a, b) => a.title.localeCompare(b.title));
+			displayGallery(data);
 		}
-		displayGallery(data);
 
 		function displayGallery(data) {
 			// Abstract
