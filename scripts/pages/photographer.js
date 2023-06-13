@@ -28,10 +28,11 @@ function displayData(photographers, media) {
 	// Create the media cards using the galleryFactory
 	const mediaModel = galleryFactory(filteredMedia);
 	const mediaCardDOM = mediaModel.getMediaCardDOM();
+	const galleryDOM = mediaModel.createGalleryDOM();
 
 	// Append the media cards to the parent div
 	parentDiv.appendChild(mediaCardDOM.sortContainer);
-	parentDiv.appendChild(mediaCardDOM.galleryContainer);
+	parentDiv.appendChild(galleryDOM.galleryContainer);
 }
 
 async function init() {
