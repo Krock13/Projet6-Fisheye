@@ -78,6 +78,8 @@ export function appendChildPhotographer(card) {
 	const btn = document.createElement('button');
 	btn.classList.add('contact_button');
 	btn.textContent = 'Contactez-moi';
+	btn.setAttribute('aria-label', 'Contact Me');
+	btn.setAttribute('tabindex', '2');
 	btn.addEventListener('click', displayModal);
 
 	// Create a container element to hold the photographer's header

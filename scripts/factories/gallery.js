@@ -1,4 +1,4 @@
-import { createLightbox } from '../utils/lightbox.js';
+import { createLightbox } from '../factories/lightbox.js';
 import { like } from '../utils/likes.js';
 
 export function galleryFactory(data) {
@@ -8,28 +8,30 @@ export function galleryFactory(data) {
 		sortContainer.classList.add('sort-container');
 
 		const sortLabel = document.createElement('p');
-		sortLabel.textContent = 'Trier par'; // Sort by
+		sortLabel.textContent = 'Trier par';
+		sortLabel.setAttribute('aria-hidden', 'true');
 
 		const arrowDown = document.createElement('img');
 		arrowDown.setAttribute('src', './assets/icons/whiteArrow.png');
 		arrowDown.classList.add('arrow-down');
-		arrowDown.setAttribute('alt', 'arrow');
+		arrowDown.setAttribute('alt', 'Flèche vers le bas');
 
 		const arrowUp = document.createElement('img');
 		arrowUp.setAttribute('src', './assets/icons/whiteArrow.png');
 		arrowUp.classList.add('arrow-up');
-		arrowUp.setAttribute('alt', 'arrow');
+		arrowUp.setAttribute('alt', 'Flèche vers le haut');
 
 		function initialButton() {
-			// Set the initial selected option to 'popularity'
 			const selectedOption = 'popularity';
 
-			// Create the main button element
 			const mainButton = document.createElement('button');
 			mainButton.setAttribute('id', 'main-button');
-			mainButton.textContent = 'Popularité'; // Popularity
-
-			// Add a click event listener to the main button
+			mainButton.textContent = 'Popularité';
+			mainButton.setAttribute('aria-label', 'Trier par popularité');
+			mainButton.setAttribute('tabindex', '3');
+			mainButton.setAttribute('role', 'listbox');
+			mainButton.setAttribute('aria-haspopup', 'true');
+			mainButton.setAttribute('aria-expanded', 'false');
 			mainButton.addEventListener('click', function () {
 				dropdownMenu(selectedOption);
 			});
@@ -37,7 +39,6 @@ export function galleryFactory(data) {
 			const sorting = 'popularity';
 			createGalleryDOM(sorting);
 
-			// Append the arrow down icon and the main button to the sort container
 			mainButton.appendChild(arrowDown);
 			sortContainer.appendChild(sortLabel);
 			sortContainer.appendChild(mainButton);
@@ -51,47 +52,43 @@ export function galleryFactory(data) {
 			const mainButton = document.createElement('button');
 			mainButton.setAttribute('id', 'main-button');
 
-			// Set the text content of the main button
 			mainButton.textContent = buttonText;
+			mainButton.setAttribute('aria-label', 'Trier par ' + buttonText);
+			mainButton.setAttribute('tabindex', '3');
+			mainButton.setAttribute('role', 'listbox');
+			mainButton.setAttribute('aria-haspopup', 'true');
+			mainButton.setAttribute('aria-expanded', 'false');
 			mainButton.addEventListener('click', function () {
-				// Add a click event listener to the main button
 				dropdownMenu(selectedOption);
 			});
 			const gallerySort = document.querySelector('.gallery-grid');
-			// Remove the gallery sort
 			galleryContainer.removeChild(gallerySort);
-			// Create the gallery DOM with the specified sorting option
 			createGalleryDOM(sorting);
 
-			// Append the arrow down icon to the main button
 			mainButton.appendChild(arrowDown);
-			// Append the main button to the sort container
 			sortContainer.appendChild(mainButton);
 		}
 
 		function buttonPopularity() {
-			// Call createButton with the 'popularity' option
 			createButton('popularity', 'Popularité', 'popularity');
 		}
 
 		function buttonDate() {
-			// Call createButton with the 'date' option
 			createButton('date', 'Date', 'date');
 		}
 
 		function buttonTitle() {
-			// Call createButton with the 'title' option
 			createButton('title', 'Titre', 'title');
 		}
 
-		// Function for handling the dropdown menu options
 		function dropdownMenu(selectedOption) {
-			const sortButton = document.createElement('div');
+			const sortButton = document.createElement('ul');
 			sortButton.setAttribute('id', 'sort-button');
+			sortButton.setAttribute('aria-expanded', 'true');
+			sortButton.setAttribute('role', 'listbox');
 			const mainButton = document.getElementById('main-button');
 			sortContainer.removeChild(mainButton);
 
-			// Define an array of options for the dropdown menu
 			const options = [
 				{ value: 'popularity', label: 'Popularité', clickHandler: buttonPopularity },
 				{ value: 'date', label: 'Date', clickHandler: buttonDate },
@@ -101,23 +98,68 @@ export function galleryFactory(data) {
 			const selectedOptionIndex = options.findIndex((option) => option.value === selectedOption);
 
 			if (selectedOptionIndex !== -1) {
-				// Create an array of sorted options with the selected option in the first position
 				const sortedOptions = [
 					options[selectedOptionIndex],
 					...options.slice(0, selectedOptionIndex),
 					...options.slice(selectedOptionIndex + 1),
 				];
 
-				// Create menu options for each sorted option
-				sortedOptions.forEach((option) => {
-					const menuOption = document.createElement('p');
+				sortedOptions.forEach((option, index) => {
+					const menuOption = document.createElement('li');
+					const optionId = `option-${index + 1}`; // Generate unique ID for each option
+					menuOption.setAttribute('id', optionId);
 					menuOption.textContent = option.label;
+					menuOption.setAttribute('role', 'option');
+					menuOption.setAttribute('aria-selected', 'false');
 					menuOption.addEventListener('click', option.clickHandler);
+
+					// Attribution des tabindex aux options du menu déroulant
+					menuOption.setAttribute('tabindex', `${index + 3}`);
+
+					// Gestion de l'événement clavier pour valider l'option
+					menuOption.addEventListener('keydown', function (event) {
+						if (event.key === 'Enter') {
+							event.preventDefault();
+							option.clickHandler();
+						}
+					});
+
+					// Gestion de l'événement focus pour mettre à jour aria-selected
+					menuOption.addEventListener('focus', function () {
+						// Mettre à jour aria-selected pour l'option actuellement focusée
+						menuOption.setAttribute('aria-selected', 'true');
+						// Mettre à jour aria-selected pour les autres options
+						const otherOptions = Array.from(sortButton.children).filter((opt) => opt !== menuOption);
+						otherOptions.forEach((opt) => opt.setAttribute('aria-selected', 'false'));
+					});
+
 					sortButton.appendChild(menuOption);
 				});
 
-				sortButton.appendChild(arrowUp);
+				// Gestion de l'événement clavier sur le conteneur du menu déroulant
+				sortButton.addEventListener('keydown', function (event) {
+					const focusedOption = document.activeElement;
+					const currentIndex = Array.from(sortButton.children).indexOf(focusedOption);
+					const optionsCount = sortButton.children.length;
+
+					if (event.key === 'ArrowUp') {
+						event.preventDefault();
+						const previousIndex = (currentIndex - 1 + optionsCount) % optionsCount;
+						sortButton.children[previousIndex].focus();
+						sortButton.children[previousIndex].setAttribute('aria-selected', 'true');
+						sortButton.children[currentIndex].setAttribute('aria-selected', 'false');
+					} else if (event.key === 'ArrowDown') {
+						event.preventDefault();
+						const nextIndex = (currentIndex + 1) % optionsCount;
+						sortButton.children[nextIndex].focus();
+						sortButton.children[nextIndex].setAttribute('aria-selected', 'true');
+						sortButton.children[currentIndex].setAttribute('aria-selected', 'false');
+					}
+				});
+
+				sortButton.setAttribute('aria-expanded', 'true');
 				sortContainer.appendChild(sortButton);
+				sortButton.focus();
 			}
 		}
 		return { sortContainer };
@@ -148,28 +190,33 @@ export function galleryFactory(data) {
 			// Abstract
 			const main = document.querySelector('#main');
 
-			// Create the div element for total likes and price
-			const abstract = document.createElement('div');
-			abstract.setAttribute('id', 'abstract');
+			// Check if the abstract element already exists
+			const abstract = document.querySelector('#abstract');
+			if (!abstract) {
+				// Create the div element for total likes and price
+				const abstract = document.createElement('div');
+				abstract.setAttribute('id', 'abstract');
 
-			// Create the paragraph element for the total likes
-			const totalLikes = document.createElement('p');
-			totalLikes.setAttribute('id', 'total-likes');
-			const allLikes = data.reduce((total, obj) => total + obj.likes, 0);
-			totalLikes.innerText = allLikes;
+				// Create the paragraph element for the total likes
+				const totalLikes = document.createElement('p');
+				totalLikes.setAttribute('id', 'total-likes');
+				const allLikes = data.reduce((total, obj) => total + obj.likes, 0);
+				totalLikes.innerText = allLikes;
 
-			// Create the paragraph element for the price
-			const photographerPrice = document.querySelector('#photographer_price');
-			const price = parseInt(photographerPrice.textContent);
-			const priceText = document.createElement('p');
-			priceText.innerText = price + '€ / jour';
-			priceText.classList.add('price_text');
+				// Create the paragraph element for the price
+				const photographerPrice = document.querySelector('#photographer_price');
+				const price = parseInt(photographerPrice.textContent);
+				const priceText = document.createElement('p');
+				priceText.innerText = price + '€ / jour';
+				priceText.classList.add('price_text');
 
-			abstract.appendChild(totalLikes);
-			abstract.appendChild(priceText);
-			main.appendChild(abstract);
+				abstract.appendChild(totalLikes);
+				abstract.appendChild(priceText);
+				main.appendChild(abstract);
+			}
 
 			const totalLikesElement = document.querySelector('#total-likes');
+			let tabindex = 6;
 
 			data.forEach((item) => {
 				const article = document.createElement('article');
@@ -184,6 +231,7 @@ export function galleryFactory(data) {
 					img.addEventListener('click', function () {
 						createLightbox(item, data);
 					});
+					img.setAttribute('tabindex', tabindex.toString());
 					article.appendChild(img);
 				} else if (item.video) {
 					// Create the <video> element for videos
@@ -195,8 +243,26 @@ export function galleryFactory(data) {
 					videoElement.addEventListener('click', function () {
 						createLightbox(item, data);
 					});
+					videoElement.setAttribute('tabindex', tabindex.toString());
 					article.appendChild(videoElement);
 				}
+
+				// Create container
+				const legendContainer = document.createElement('div');
+				legendContainer.classList.add('legend-container');
+
+				// Create the button element for the heart icon
+				const heart = document.createElement('button');
+				heart.classList.add('heart');
+				heart.setAttribute('aria-label', 'likes');
+				heart.dataset.itemId = item.id;
+				heart.addEventListener('click', function () {
+					like(this, totalLikesElement);
+				});
+				heart.setAttribute('tabindex', (tabindex + 1).toString());
+				legendContainer.appendChild(heart);
+
+				tabindex += 2;
 
 				// Create element for the media title
 				const h2 = document.createElement('h2');
@@ -207,23 +273,9 @@ export function galleryFactory(data) {
 				p1.classList.add('like');
 				p1.textContent = item.likes;
 
-				// Create the image element for the heart icon
-				const heart = document.createElement('button');
-				heart.classList.add('heart');
-				heart.setAttribute('aria-label', 'likes');
-				heart.dataset.itemId = item.id;
-				heart.addEventListener('click', function () {
-					like(this, totalLikesElement);
-				});
-
-				// Create container
-				const legendContainer = document.createElement('div');
-				legendContainer.classList.add('legend-container');
-
 				// Append the title, paragraph, and heart elements to the container
 				legendContainer.appendChild(h2);
 				legendContainer.appendChild(p1);
-				legendContainer.appendChild(heart);
 
 				// Append the div to the article
 				article.appendChild(legendContainer);
@@ -232,6 +284,8 @@ export function galleryFactory(data) {
 				galleryGrid.appendChild(article);
 				galleryContainer.appendChild(galleryGrid);
 			});
+
+			return { galleryContainer };
 		}
 		return { galleryContainer };
 	}
