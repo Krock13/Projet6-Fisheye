@@ -108,6 +108,7 @@ export function galleryFactory(data) {
 					const menuOption = document.createElement('li');
 					const optionId = `option-${index + 1}`; // Generate unique ID for each option
 					menuOption.setAttribute('id', optionId);
+					menuOption.classList.add('option');
 					menuOption.textContent = option.label;
 					menuOption.setAttribute('role', 'option');
 					menuOption.setAttribute('aria-selected', 'false');
@@ -158,6 +159,7 @@ export function galleryFactory(data) {
 				});
 
 				sortButton.setAttribute('aria-expanded', 'true');
+				sortButton.appendChild(arrowUp);
 				sortContainer.appendChild(sortButton);
 				sortButton.focus();
 			}
@@ -189,69 +191,63 @@ export function galleryFactory(data) {
 		function displayGallery(data) {
 			// Abstract
 			const main = document.querySelector('#main');
+			const abstract = document.querySelector('#abstract');
 
 			// Check if the abstract element already exists
-			const abstract = document.querySelector('#abstract');
 			if (!abstract) {
 				// Create the div element for total likes and price
-				const abstract = document.createElement('div');
-				abstract.setAttribute('id', 'abstract');
+				const abstractElement = document.createElement('div');
+				abstractElement.setAttribute('id', 'abstract');
 
 				// Create the paragraph element for the total likes
-				const totalLikes = document.createElement('p');
-				totalLikes.setAttribute('id', 'total-likes');
+				const totalLikesElement = document.createElement('p');
+				totalLikesElement.setAttribute('id', 'total-likes');
 				const allLikes = data.reduce((total, obj) => total + obj.likes, 0);
-				totalLikes.innerText = allLikes;
+				totalLikesElement.textContent = allLikes;
 
 				// Create the paragraph element for the price
 				const photographerPrice = document.querySelector('#photographer_price');
 				const price = parseInt(photographerPrice.textContent);
-				const priceText = document.createElement('p');
-				priceText.innerText = price + '€ / jour';
-				priceText.classList.add('price_text');
+				const priceTextElement = document.createElement('p');
+				priceTextElement.textContent = price + '€ / jour';
+				priceTextElement.classList.add('price_text');
 
-				abstract.appendChild(totalLikes);
-				abstract.appendChild(priceText);
-				main.appendChild(abstract);
+				abstractElement.appendChild(totalLikesElement);
+				abstractElement.appendChild(priceTextElement);
+				main.appendChild(abstractElement);
 			}
 
 			const totalLikesElement = document.querySelector('#total-likes');
 			let tabindex = 6;
 
+			function createLightboxHandler(item) {
+				if (!document.querySelector('.lightbox_container')) {
+					createLightbox(item, data);
+				}
+			}
+
+			function createLightboxKeydownHandler(item, event) {
+				if (event.key === 'Enter' && !document.querySelector('.lightbox_container')) {
+					createLightbox(item, data);
+				}
+			}
+
 			data.forEach((item) => {
 				const article = document.createElement('article');
+				const mediaElement = item.image ? document.createElement('img') : document.createElement('video');
 
-				if (item.image) {
-					// Create the <img> element for images
-					const img = document.createElement('img');
-					const currentImage = `./assets/media/${item.image}`;
-					img.setAttribute('src', currentImage);
-					img.setAttribute('alt', item.title + ', closeup view');
-					img.classList.add('gallery-media');
-					img.addEventListener('click', function () {
-						createLightbox(item, data);
-					});
-					img.setAttribute('tabindex', tabindex.toString());
-					article.appendChild(img);
-				} else if (item.video) {
-					// Create the <video> element for videos
-					const videoElement = document.createElement('video');
-					const currentVideo = `./assets/media/${item.video}`;
-					videoElement.setAttribute('src', currentVideo);
-					videoElement.setAttribute('alt', item.title + ', closeup view');
-					videoElement.classList.add('gallery-media');
-					videoElement.addEventListener('click', function () {
-						createLightbox(item, data);
-					});
-					videoElement.setAttribute('tabindex', tabindex.toString());
-					article.appendChild(videoElement);
-				}
+				mediaElement.src = `./assets/media/${item.image || item.video}`;
+				mediaElement.alt = item.title + ', closeup view';
+				mediaElement.classList.add('gallery-media');
+				mediaElement.addEventListener('click', createLightboxHandler.bind(null, item));
+				mediaElement.addEventListener('keydown', createLightboxKeydownHandler.bind(null, item));
 
-				// Create container
+				mediaElement.tabIndex = tabindex.toString();
+				article.appendChild(mediaElement);
+
 				const legendContainer = document.createElement('div');
 				legendContainer.classList.add('legend-container');
 
-				// Create the button element for the heart icon
 				const heart = document.createElement('button');
 				heart.classList.add('heart');
 				heart.setAttribute('aria-label', 'likes');
@@ -259,28 +255,23 @@ export function galleryFactory(data) {
 				heart.addEventListener('click', function () {
 					like(this, totalLikesElement);
 				});
-				heart.setAttribute('tabindex', (tabindex + 1).toString());
+
+				heart.tabIndex = (tabindex + 1).toString();
 				legendContainer.appendChild(heart);
 
 				tabindex += 2;
 
-				// Create element for the media title
 				const h2 = document.createElement('h2');
 				h2.textContent = item.title;
 
-				// Create the paragraph element for the media likes
 				const p1 = document.createElement('p');
 				p1.classList.add('like');
 				p1.textContent = item.likes;
 
-				// Append the title, paragraph, and heart elements to the container
 				legendContainer.appendChild(h2);
 				legendContainer.appendChild(p1);
 
-				// Append the div to the article
 				article.appendChild(legendContainer);
-
-				// Append the article to the gallery container
 				galleryGrid.appendChild(article);
 				galleryContainer.appendChild(galleryGrid);
 			});
@@ -289,6 +280,6 @@ export function galleryFactory(data) {
 		}
 		return { galleryContainer };
 	}
-	// Return an object with the getMediaCardDOM method
+	// Return an object with the getMediaCardDOM and createGalleryDOM method
 	return { getMediaCardDOM, createGalleryDOM };
 }

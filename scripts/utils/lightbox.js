@@ -1,7 +1,13 @@
 export function closeLightbox() {
 	const main = document.querySelector('#main');
 	const lightbox = document.querySelector('.lightbox');
-	main.removeChild(lightbox);
+	const container = document.querySelector('.lightbox_container');
+
+	main.setAttribute('aria-hidden', 'false');
+	lightbox.removeChild(container);
+	lightbox.removeAttribute('class', 'lightbox');
+
+	document.removeEventListener('keydown', handleKeyboardNavigation);
 }
 
 export function goToSlide(direction, data) {

@@ -87,6 +87,12 @@
 	padding-left: 20px;
 }
 
+#main-button:hover,
+#main-button:focus {
+	background-color: #db8876;
+	color: black;
+}
+
 .arrow-down {
 	position: absolute;
 	right: 20px;
@@ -126,6 +132,12 @@
 	position: absolute;
 	right: 20px;
 	top: 28px;
+}
+
+.option:hover,
+.option:focus {
+	background-color: #db8876;
+	color: black;
 }
 
 /* Modal */

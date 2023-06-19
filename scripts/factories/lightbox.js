@@ -1,7 +1,13 @@
 import { closeLightbox, goToSlide, handleKeyboardNavigation } from '../utils/lightbox.js';
 
+// Variable to store the reference of the keyboard event listener
+let keyboardEventListener = null;
+
 export function createLightbox(media, data) {
-	const lightbox = document.createElement('div');
+	const mainContent = document.getElementById('main');
+	mainContent.setAttribute('aria-hidden', 'true');
+
+	const lightbox = document.getElementById('lightbox');
 	lightbox.classList.add('lightbox');
 
 	const lightboxContainer = document.createElement('div');
@@ -34,11 +40,13 @@ export function createLightbox(media, data) {
 	const lightboxNext = document.createElement('button');
 	lightboxNext.innerText = 'Suivant';
 	lightboxNext.classList.add('lightbox_next');
+	lightboxNext.setAttribute('aria-label', 'Image suivante');
 	lightboxNext.addEventListener('click', () => goToSlide('next', data));
 
 	const lightboxPrev = document.createElement('button');
 	lightboxPrev.innerText = 'Précédent';
 	lightboxPrev.classList.add('lightbox_prev');
+	lightboxPrev.setAttribute('aria-label', 'Image précédente');
 	lightboxPrev.addEventListener('click', () => goToSlide('previous', data));
 
 	lightboxContainer.appendChild(lightboxClose);
@@ -47,9 +55,9 @@ export function createLightbox(media, data) {
 	lightboxContainer.appendChild(title);
 	lightbox.appendChild(lightboxContainer);
 
-	const main = document.getElementById('main');
-	main.appendChild(lightbox);
-
 	// Add keyboard event listener
-	document.addEventListener('keydown', (event) => handleKeyboardNavigation(event, data));
+	if (!keyboardEventListener) {
+		keyboardEventListener = (event) => handleKeyboardNavigation(event, data);
+		document.addEventListener('keydown', keyboardEventListener);
+	}
 }
