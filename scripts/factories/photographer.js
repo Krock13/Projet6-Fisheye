@@ -16,7 +16,7 @@ export function photographerFactory(data) {
 		const link = document.createElement('a');
 		link.href = 'photographer.html' + '?_id=' + id;
 		link.classList.add('photographer_link');
-		link.setAttribute('aria-label', 'Voir les détails du photographe');
+		link.setAttribute('aria-label', 'Voir les détails du photographe' + name);
 
 		// Create the image element and set its source
 		const img = document.createElement('img');
@@ -78,7 +78,7 @@ export function appendChildPhotographer(card) {
 	const btn = document.createElement('button');
 	btn.classList.add('contact_button');
 	btn.textContent = 'Contactez-moi';
-	btn.setAttribute('aria-label', 'Contact Me');
+	btn.setAttribute('aria-label', 'Contactez-moi');
 	btn.setAttribute('tabindex', '2');
 	btn.addEventListener('click', displayModal);
 

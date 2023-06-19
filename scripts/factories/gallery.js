@@ -111,6 +111,7 @@ export function galleryFactory(data) {
 					menuOption.classList.add('option');
 					menuOption.textContent = option.label;
 					menuOption.setAttribute('role', 'option');
+					menuOption.setAttribute('aria-label', 'trier par' + option.label);
 					menuOption.setAttribute('aria-selected', 'false');
 					menuOption.addEventListener('click', option.clickHandler);
 
