@@ -115,10 +115,10 @@ export function galleryFactory(data) {
 					menuOption.setAttribute('aria-selected', 'false');
 					menuOption.addEventListener('click', option.clickHandler);
 
-					// Attribution des tabindex aux options du menu déroulant
+					// Assigning tabindexes to drop-down menu options
 					menuOption.setAttribute('tabindex', `${index + 3}`);
 
-					// Gestion de l'événement clavier pour valider l'option
+					// Keyboard event management to validate the option
 					menuOption.addEventListener('keydown', function (event) {
 						if (event.key === 'Enter') {
 							event.preventDefault();
@@ -126,11 +126,11 @@ export function galleryFactory(data) {
 						}
 					});
 
-					// Gestion de l'événement focus pour mettre à jour aria-selected
+					// Focus event management to update aria-selected
 					menuOption.addEventListener('focus', function () {
-						// Mettre à jour aria-selected pour l'option actuellement focusée
+						// Update aria-selected for the currently focused option
 						menuOption.setAttribute('aria-selected', 'true');
-						// Mettre à jour aria-selected pour les autres options
+						// Update aria-selected for other options
 						const otherOptions = Array.from(sortButton.children).filter((opt) => opt !== menuOption);
 						otherOptions.forEach((opt) => opt.setAttribute('aria-selected', 'false'));
 					});
@@ -138,7 +138,7 @@ export function galleryFactory(data) {
 					sortButton.appendChild(menuOption);
 				});
 
-				// Gestion de l'événement clavier sur le conteneur du menu déroulant
+				// Keyboard event management on drop-down menu container
 				sortButton.addEventListener('keydown', function (event) {
 					const focusedOption = document.activeElement;
 					const currentIndex = Array.from(sortButton.children).indexOf(focusedOption);
